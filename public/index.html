@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pannello Amministratore</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="navigation">
+                <ul>
+                    <li class="active" data-section="dashboard"><a href="#"><i class="material-icons">dashboard</i> Dashboard</a></li>
+                    <li data-section="courses"><a href="#"><i class="material-icons">school</i> Corsi</a></li>
+                    <li data-section="students"><a href="#"><i class="material-icons">group</i> Studenti</a></li>
+                    <li data-section="messages"><a href="#"><i class="material-icons">message</i> Messaggi</a></li>
+                    <li data-section="settings"><a href="#"><i class="material-icons">settings</i> Impostazioni</a></li>
+                    <li><a href="#" id="logout-btn"><i class="material-icons">logout</i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="header">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="user-info">
+                    <span id="user-display-name">Admin</span>
+                    <i class="material-icons">account_circle</i>
+                </div>
+            </header>
+            <section class="content-area" id="dashboard-content">
+                <h2>Benvenuto nel Pannello Amministratore!</h2>
+                <p>Usa la barra laterale per navigare tra le sezioni.</p>
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <h3>Totale Studenti</h3>
+                        <p id="total-students">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Totale Corsi</h3>
+                        <p id="total-courses">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-area hidden" id="courses-content">
+                <h2>Gestione Corsi</h2>
+                <button id="add-course-btn" class="add-new-btn">Aggiungi Nuovo Corso</button>
+                <div class="course-list">
+                </div>
+                <div id="course-form-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">×</span>
+                        <h3 id="course-form-title">Aggiungi Corso</h3>
+                        <form id="course-form">
+                            <input type="hidden" id="course-id">
+                            <label for="course-title">Titolo:</label>
+                            <input type="text" id="course-title" required>
+                            <label for="course-description">Descrizione:</label>
+                            <textarea id="course-description"></textarea>
+                            <label for="course-video">URL Video (YouTube, Vimeo, ecc.):</label>
+                            <input type="url" id="course-video" required>
+                            <label for="course-link">Link Esterno (Opzionale):</label>
+                            <input type="url" id="course-link">
+                            <label for="course-week">Settimana:</label>
+                            <input type="number" id="course-week" min="1" required>
+                            <button type="submit" id="submit-course-btn">Salva Corso</button>
+                        </form>
+                    </div>
+                </div>
+                <div id="video-modal" class="modal">
+                    <div class="modal-content video-modal-content">
+                        <span class="close-button">×</span>
+                        <h3 id="video-title"></h3>
+                        <div id="video-embed-container"></div>
+                        <a id="external-link-btn" href="#" target="_blank" class="external-link-button">Vai al Link Esterno</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-area hidden" id="students-content">
+                <h2>Gestione Studenti</h2>
+                <button id="add-student-btn" class="add-new-btn">Aggiungi Nuovo Studente</button>
+                <div class="student-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Corsi Assegnati</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="student-form-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">×</span>
+                        <h3 id="student-form-title">Aggiungi Studente</h3>
+                        <form id="student-form">
+                            <input type="hidden" id="student-id">
+                            <label for="student-name">Nome:</label>
+                            <input type="text" id="student-name" required>
+                            <label for="student-email">Email:</label>
+                            <input type="email" id="student-email" required>
+                            <button type="submit" id="submit-student-btn">Salva Studente</button>
+                        </form>
+                    </div>
+                </div>
+                <div id="assign-courses-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">×</span>
+                        <h3 id="assign-courses-title">Assegna Corsi a <span id="student-name-assign"></span></h3>
+                        <div class="courses-assignment-list">
+                        </div>
+                        <button id="save-assignments-btn" class="add-new-btn">Salva Assegnazioni</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-area hidden" id="messages-content">
+                <h2>Messaggi</h2>
+                <p>Qui potrai gestire i messaggi (funzionalità da implementare in futuro).</p>
+            </section>
+
+            <section class="content-area hidden" id="settings-content">
+                <h2>Impostazioni</h2>
+                <p>Qui potrai gestire le impostazioni del portale (funzionalità da implementare in futuro).</p>
+            </section>
+
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

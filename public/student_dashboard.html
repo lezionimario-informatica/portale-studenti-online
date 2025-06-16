@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Studente</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Stili specifici per la dashboard studente (se diversi da admin) */
+        .header {
+            background-color: #e0f7fa; /* Un colore più chiaro per la dashboard studente */
+            color: var(--text-color);
+        }
+        .header h1 {
+            color: var(--secondary-color); /* Blu per i titoli studenti */
+        }
+        .sidebar {
+            background-color: var(--secondary-color); /* Sidebar blu per gli studenti */
+        }
+        .sidebar .logo h2 {
+            color: white;
+        }
+        .sidebar .navigation ul li a:hover,
+        .sidebar .navigation ul li.active a {
+            background-color: #1976d2; /* Tonalità più scura del blu */
+        }
+        /* Card dei corsi studente */
+        .student-courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .student-course-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .student-course-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+        .student-course-card p {
+            color: var(--light-text-color);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            flex-grow: 1;
+            margin-bottom: 15px;
+        }
+        .student-course-card .course-actions {
+            justify-content: flex-start; /* Allinea a sinistra */
+        }
+
+        /* Riepilogo specifico studente (se necessario) */
+        .student-summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .student-summary-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 25px;
+            text-align: center;
+        }
+        .student-summary-card h3 {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .student-summary-card p {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Portale Studente</h2>
+            </div>
+            <nav class="navigation">
+                <ul>
+                    <li class="active" data-section="student-dashboard"><a href="#"><i class="material-icons">home</i> Home</a></li>
+                    <li data-section="my-courses"><a href="#"><i class="material-icons">school</i> I Miei Corsi</a></li>
+                    <li><a href="#" id="logout-btn-student"><i class="material-icons">logout</i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="header">
+                <h1 id="page-title-student">Home Studente</h1>
+                <div class="user-info">
+                    <span id="user-display-name-student">Studente</span>
+                    <i class="material-icons">account_circle</i>
+                </div>
+            </header>
+
+            <section class="content-area" id="student-dashboard-content">
+                <h2>Benvenuto nel tuo Portale!</h2>
+                <p>Qui puoi vedere un riepilogo del tuo percorso.</p>
+                <div class="student-summary-cards">
+                    <div class="student-summary-card">
+                        <h3>Corsi Assegnati</h3>
+                        <p id="total-assigned-courses">0</p>
+                    </div>
+                    </div>
+            </section>
+
+            <section class="content-area hidden" id="my-courses-content">
+                <h2>I Miei Corsi</h2>
+                <div class="student-courses-grid">
+                    </div>
+                <div id="video-modal" class="modal">
+                    <div class="modal-content video-modal-content">
+                        <span class="close-button">×</span>
+                        <h3 id="video-title"></h3>
+                        <div id="video-embed-container"></div>
+                        <a id="external-link-btn" href="#" target="_blank" class="external-link-button">Vai al Link Esterno</a>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+    <script src="student_script.js"></script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Portale Studenti</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Stili specifici per la pagina di login */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--background-color);
+        }
+
+        .login-container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+            .login-container h2 {
+                color: var(--primary-color);
+                margin-bottom: 30px;
+                font-size: 2rem;
+            }
+
+            .login-container label {
+                display: block;
+                text-align: left;
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: var(--text-color);
+            }
+
+            .login-container input[type="text"],
+            .login-container input[type="password"] {
+                width: 100%;
+                padding: 12px;
+                margin-bottom: 20px;
+                border: 1px solid var(--border-color);
+                border-radius: 6px;
+                font-size: 1rem;
+            }
+
+                .login-container input[type="text"]:focus,
+                .login-container input[type="password"]:focus {
+                    outline: none;
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+                }
+
+            .login-container button {
+                width: 100%;
+                padding: 12px;
+                background-color: var(--primary-color);
+                color: white;
+                border: none;
+                border-radius: 6px;
+                font-size: 1.1rem;
+                cursor: pointer;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+
+                .login-container button:hover {
+                    background-color: #43a047;
+                    transform: translateY(-2px);
+                }
+
+        .login-message {
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: red;
+        }
+
+            .login-message.success {
+                color: green;
+            }
+
+        .register-link {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--light-text-color);
+        }
+
+            .register-link a {
+                color: var(--secondary-color);
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .register-link a:hover {
+                    text-decoration: underline;
+                }
+
+        .small-text {
+            font-size: 0.8rem;
+            color: var(--light-text-color);
+            margin-bottom: 15px;
+        }
+        /* Stili per il modal (presi da style.css ma ripetuti per completezza qui) */
+        .modal {
+            display: none; /* Nascosto di default */
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+            .close-button:hover,
+            .close-button:focus {
+                color: #333;
+                text-decoration: none;
+            }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Accedi al Portale</h2>
+        <form id="login-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p id="login-message" class="login-message"></p>
+        <p class="register-link">
+            Sei un nuovo studente e non hai un account? <a href="#" id="show-register">Registrati qui</a>
+        </p>
+
+        <div id="register-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">×</span>
+                <h3>Registrazione Studente</h3>
+                <form id="register-form">
+                    <label for="reg-username">Username:</label>
+                    <input type="text" id="reg-username" name="username" required>
+                    <label for="reg-password">Password:</label>
+                    <input type="password" id="reg-password" name="password" required>
+                    <label for="student-email-register">Email Studente (esistente nel DB):</label>
+                    <input type="email" id="student-email-register" required>
+                    <p class="small-text">Assicurati che l'email dello studente esista già nella sezione "Studenti" del pannello amministratore, poichè verrà collegata al tuo account utente.</p>
+                    <button type="submit">Registra Account</button>
+                </form>
+                <p id="register-message" class="login-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('login-form');
+            const loginMessage = document.getElementById('login-message');
+            const showRegisterLink = document.getElementById('show-register');
+            const registerModal = document.getElementById('register-modal');
+            const registerForm = document.getElementById('register-form');
+            const registerMessage = document.getElementById('register-message');
+            const closeButtons = document.querySelectorAll('.modal .close-button');
+
+            // Funzione per mostrare/nascondere il modal di registrazione
+            showRegisterLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                registerModal.style.display = 'flex'; // Mostra il modal
+                registerForm.reset();
+                registerMessage.textContent = '';
+            });
+
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    registerModal.style.display = 'none'; // Nasconde il modal al click della X
+                });
+            });
+
+            // Chiudi il modal cliccando fuori
+            window.addEventListener('click', (event) => {
+                if (event.target === registerModal) {
+                    registerModal.style.display = 'none';
+                }
+            });
+
+            // Gestione del login
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = loginForm.username.value;
+                const password = loginForm.password.value;
+
+                loginMessage.textContent = 'Accesso in corso...';
+                loginMessage.style.color = 'blue';
+
+                try {
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        loginMessage.textContent = data.message;
+                        loginMessage.style.color = 'green';
+                        if (data.role === 'admin') {
+                            window.location.href = '/admin-dashboard';
+                        } else if (data.role === 'student') {
+                            window.location.href = '/student-dashboard';
+                        }
+                    } else {
+                        loginMessage.textContent = data.error || 'Credenziali non valide.';
+                        loginMessage.style.color = 'red';
+                    }
+                } catch (error) {
+                    console.error('Errore di rete durante il login:', error);
+                    loginMessage.textContent = 'Errore di connessione al server.';
+                    loginMessage.style.color = 'red';
+                }
+            });
+
+            // Gestione della registrazione
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = registerForm['reg-username'].value;
+                const password = registerForm['reg-password'].value;
+                const studentEmail = registerForm['student-email-register'].value;
+
+                registerMessage.textContent = 'Registrazione in corso...';
+                registerMessage.style.color = 'blue';
+
+                try {
+                    // Primo: trova l'ID dello studente dall'email
+                    // NOTA: Questa API /api/students è protetta per l'admin.
+                    // Per la registrazione, l'admin deve aver già creato lo studente.
+                    // Se vuoi permettere la registrazione senza admin, questa logica andrebbe rivista.
+                    const studentResponse = await fetch('/api/students');
+                    if (!studentResponse.ok) {
+                        const errData = await studentResponse.json();
+                        // Questo errore dovrebbe indicare che non è autenticato per accedere a /api/students
+                        registerMessage.textContent = `Errore: ${errData.error || 'Impossibile verificare l\'email dello studente. Assicurati di aver aggiunto lo studente come amministratore.'}`;
+                        registerMessage.style.color = 'red';
+                        return;
+                    }
+                    const students = await studentResponse.json();
+                    const student = students.find(s => s.email === studentEmail);
+
+                    if (!student) {
+                        registerMessage.textContent = 'Email studente non trovata. Assicurati che lo studente esista nel sistema (chiedi all\'amministratore).';
+                        registerMessage.style.color = 'red';
+                        return;
+                    }
+
+                    // Secondo: registra l'utente
+                    const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password, studentId: student.id })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        registerMessage.textContent = 'Account creato con successo! Ora puoi effettuare il login.';
+                        registerMessage.style.color = 'green';
+                        registerForm.reset();
+                        setTimeout(() => {
+                            registerModal.style.display = 'none';
+                            loginMessage.textContent = 'Registrazione completata, effettua il login.';
+                            loginMessage.style.color = 'green';
+                        }, 2000);
+                    } else {
+                        registerMessage.textContent = data.error || 'Errore durante la registrazione.';
+                        registerMessage.style.color = 'red';
+                    }
+                } catch (error) {
+                    console.error('Errore di rete durante la registrazione:', error);
+                    registerMessage.textContent = 'Errore di connessione al server.';
+                    registerMessage.style.color = 'red';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
